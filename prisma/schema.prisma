@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  password     String
+  role         String   @default("STUDENT") // "STUDENT", "TEACHER", "ADMIN"
+  isSubscriber Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  // Gamificação (apenas para alunos)
+  xp           Int      @default(0)
+  level        Int      @default(1)
+  stage        String   @default("OVO") // "OVO", "LARVA", "PUPA", "ADULTO"
+
+  // Relacionamentos
+  enrollments  Enrollment[]
+}
+
+model ClassGroup {
+  id          String   @id @default(uuid())
+  name        String   // Ex: "Extensivo Medicina"
+  description String?
+  
+  enrollments Enrollment[]
+  liveSessions LiveSession[]
+}
+
+model Enrollment {
+  id           String     @id @default(uuid())
+  userId       String
+  classGroupId String
+  enrolledAt   DateTime   @default(now())
+
+  user         User       @relation(fields: [userId], references: [id])
+  classGroup   ClassGroup @relation(fields: [classGroupId], references: [id])
+
+  @@unique([userId, classGroupId])
+}
+
+model LiveSession {
+  id           String     @id @default(uuid())
+  title        String
+  description  String?
+  roomUrl      String     // O link do quadro branco gerado
+  startTime    DateTime
+  endTime      DateTime
+  
+  classGroupId String
+  classGroup   ClassGroup @relation(fields: [classGroupId], references: [id])
+}

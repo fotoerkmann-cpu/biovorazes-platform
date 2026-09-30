@@ -18,6 +18,15 @@ export const authOptions = {
           throw new Error("Dados inválidos");
         }
 
+        // --- MOCK DE DEMONSTRAÇÃO (Para a Vercel não falhar por falta do SQLite) ---
+        if (credentials.email === "professor@biovorazes.com" && credentials.password === "senha123") {
+          return { id: "1", name: "Prof. Charles", email: "professor@biovorazes.com", role: "TEACHER" };
+        }
+        if (credentials.email === "aluno@email.com" && credentials.password === "senha123") {
+          return { id: "2", name: "Aluno Curioso", email: "aluno@email.com", role: "STUDENT" };
+        }
+        // --------------------------------------------------------------------------
+
         const user = await prisma.user.findUnique({
           where: { email: credentials.email }
         });

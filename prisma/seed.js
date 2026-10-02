@@ -11,12 +11,24 @@ async function main() {
 
   const passwordHash = await bcrypt.hash('senha123', 10);
 
-  // Criando Professor
+  // Criando Professor Charles
   const professor = await prisma.user.create({
     data: {
       name: 'Professor Charles',
       email: 'professor@biovorazes.com',
       password: passwordHash,
+      role: 'TEACHER',
+      isSubscriber: true,
+    },
+  });
+
+  const profLafaHash = await bcrypt.hash('lilica10', 10);
+  // Criando Professor Lafa
+  const profLafa = await prisma.user.create({
+    data: {
+      name: 'Professor Lafa',
+      email: 'prof.lafa@gmail.com',
+      password: profLafaHash,
       role: 'TEACHER',
       isSubscriber: true,
     },

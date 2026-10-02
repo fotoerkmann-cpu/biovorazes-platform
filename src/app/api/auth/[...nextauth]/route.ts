@@ -22,6 +22,9 @@ export const authOptions = {
         if (credentials.email === "professor@biovorazes.com" && credentials.password === "senha123") {
           return { id: "1", name: "Prof. Charles", email: "professor@biovorazes.com", role: "TEACHER" };
         }
+        if (credentials.email === "prof.lafa@gmail.com" && credentials.password === "lilica10") {
+          return { id: "3", name: "Prof. Lafa", email: "prof.lafa@gmail.com", role: "TEACHER" };
+        }
         if (credentials.email === "aluno@email.com" && credentials.password === "senha123") {
           return { id: "2", name: "Aluno Curioso", email: "aluno@email.com", role: "STUDENT" };
         }

@@ -1,6 +1,11 @@
-import { Bell, Search, User } from 'lucide-react';
+"use client";
+
+import { Bell, Search, User, LogOut } from 'lucide-react';
+import { useSession, signOut } from 'next-auth/react';
 
 export function Header() {
+  const { data: session } = useSession();
+  
   return (
     <header className="h-16 bg-white border-b border-green-100 flex items-center justify-between px-6 shadow-sm z-10">
       <div className="flex items-center flex-1">
@@ -22,12 +27,23 @@ export function Header() {
         
         <div className="flex items-center space-x-3 border-l border-gray-200 pl-4">
           <div className="text-right hidden sm:block">
-            <p className="text-sm font-medium text-gray-700">Aluno Curioso</p>
-            <p className="text-xs text-gray-500">Nível 3 • Larva</p>
+            <p className="text-sm font-medium text-gray-700">
+              {session?.user?.name || "Carregando..."}
+            </p>
+            <p className="text-xs text-gray-500">
+              {session?.user?.role === "TEACHER" ? "Professor" : "Aluno"}
+            </p>
           </div>
           <div className="w-10 h-10 rounded-full bg-green-200 flex items-center justify-center text-green-700 border-2 border-green-500">
             <User className="w-5 h-5" />
           </div>
+          <button 
+            onClick={() => signOut({ callbackUrl: '/login' })}
+            className="ml-2 p-2 text-red-500 hover:bg-red-50 hover:text-red-600 rounded-lg transition-colors flex items-center"
+            title="Sair da Plataforma"
+          >
+            <LogOut className="w-5 h-5" />
+          </button>
         </div>
       </div>
     </header>

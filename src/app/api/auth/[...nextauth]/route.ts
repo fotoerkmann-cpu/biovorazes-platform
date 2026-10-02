@@ -18,27 +18,30 @@ export const authOptions = {
           throw new Error("Dados inválidos");
         }
 
+        const emailTratado = credentials.email.trim().toLowerCase();
+        const senhaTratada = credentials.password.trim();
+
         // --- MOCK DE DEMONSTRAÇÃO (Para a Vercel não falhar por falta do SQLite) ---
-        if (credentials.email === "professor@biovorazes.com" && credentials.password === "senha123") {
+        if (emailTratado === "professor@biovorazes.com" && senhaTratada === "senha123") {
           return { id: "1", name: "Prof. Charles", email: "professor@biovorazes.com", role: "TEACHER" };
         }
-        if (credentials.email === "prof.lafa@gmail.com" && credentials.password === "lilica10") {
+        if (emailTratado === "prof.lafa@gmail.com" && senhaTratada === "lilica10") {
           return { id: "3", name: "Prof. Lafa", email: "prof.lafa@gmail.com", role: "TEACHER" };
         }
-        if (credentials.email === "aluno@email.com" && credentials.password === "senha123") {
+        if (emailTratado === "aluno@email.com" && senhaTratada === "senha123") {
           return { id: "2", name: "Aluno Curioso", email: "aluno@email.com", role: "STUDENT" };
         }
         // --------------------------------------------------------------------------
 
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email }
+          where: { email: emailTratado }
         });
 
         if (!user) {
           throw new Error("Usuário não encontrado");
         }
 
-        const isValid = await bcrypt.compare(credentials.password, user.password);
+        const isValid = await bcrypt.compare(senhaTratada, user.password);
 
         if (!isValid) {
           throw new Error("Senha incorreta");

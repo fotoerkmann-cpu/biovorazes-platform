@@ -17,43 +17,80 @@ model User {
   createdAt    DateTime @default(now())
 
   // Gamificação (apenas para alunos)
-  xp           Int      @default(0)
-  level        Int      @default(1)
-  stage        String   @default("OVO") // "OVO", "LARVA", "PUPA", "ADULTO"
+  xp    Int    @default(0)
+  level Int    @default(1)
+  stage String @default("OVO") // "OVO", "LARVA", "PUPA", "ADULTO"
 
   // Relacionamentos
-  enrollments  Enrollment[]
+  enrollments    Enrollment[]
+  lessonProgress LessonProgress[]
 }
 
 model ClassGroup {
-  id          String   @id @default(uuid())
-  name        String   // Ex: "Extensivo Medicina"
+  id          String  @id @default(uuid())
+  name        String // Ex: "Extensivo Medicina"
   description String?
-  
-  enrollments Enrollment[]
+
+  enrollments  Enrollment[]
   liveSessions LiveSession[]
+  trails       Trail[]
+}
+
+model Trail {
+  id           String     @id @default(uuid())
+  title        String
+  description  String?
+  classGroupId String
+  classGroup   ClassGroup @relation(fields: [classGroupId], references: [id])
+  lessons      Lesson[]
+  createdAt    DateTime   @default(now())
+}
+
+model Lesson {
+  id       String @id @default(uuid())
+  trailId  String
+  trail    Trail  @relation(fields: [trailId], references: [id])
+  title    String
+  type     String // "Video", "Exercicio", "Leitura"
+  duration String // "10 min"
+  xpReward Int    @default(200)
+  order    Int    @default(0)
+
+  progress LessonProgress[]
+}
+
+model LessonProgress {
+  id          String   @id @default(uuid())
+  userId      String
+  lessonId    String
+  completedAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  lesson Lesson @relation(fields: [lessonId], references: [id])
+
+  @@unique([userId, lessonId])
 }
 
 model Enrollment {
-  id           String     @id @default(uuid())
+  id           String   @id @default(uuid())
   userId       String
   classGroupId String
-  enrolledAt   DateTime   @default(now())
+  enrolledAt   DateTime @default(now())
 
-  user         User       @relation(fields: [userId], references: [id])
-  classGroup   ClassGroup @relation(fields: [classGroupId], references: [id])
+  user       User       @relation(fields: [userId], references: [id])
+  classGroup ClassGroup @relation(fields: [classGroupId], references: [id])
 
   @@unique([userId, classGroupId])
 }
 
 model LiveSession {
-  id           String     @id @default(uuid())
-  title        String
-  description  String?
-  roomUrl      String     // O link do quadro branco gerado
-  startTime    DateTime
-  endTime      DateTime
-  
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  roomUrl     String // O link do quadro branco gerado
+  startTime   DateTime
+  endTime     DateTime
+
   classGroupId String
   classGroup   ClassGroup @relation(fields: [classGroupId], references: [id])
 }

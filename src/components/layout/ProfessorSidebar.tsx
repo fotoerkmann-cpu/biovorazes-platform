@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, MonitorPlay, FileText, Database, Dna } from 'lucide-react';
+import { LayoutDashboard, Users, MonitorPlay, FileText, Database, Route, Dna } from 'lucide-react';
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -12,6 +12,7 @@ function cn(...inputs: ClassValue[]) {
 
 const navItems = [
   { name: 'Visão Geral', href: '/professor', icon: LayoutDashboard },
+  { name: 'Criar Trilhas & Aulas', href: '/professor/trilhas', icon: Route },
   { name: 'Alunos e Grupos', href: '/professor/turmas', icon: Users },
   { name: 'Quadro Branco (Ao Vivo)', href: '/professor/quadro', icon: MonitorPlay },
   { name: 'Gerador de Provas PDF', href: '/professor/provas', icon: FileText },
@@ -33,7 +34,7 @@ export function ProfessorSidebar() {
       
       <nav className="flex-1 py-6 px-3 space-y-2">
         {navItems.map((item) => {
-          const isActive = pathname === item.href;
+          const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
           const Icon = item.icon;
           
           return (
@@ -60,11 +61,11 @@ export function ProfessorSidebar() {
       <div className="p-4 border-t border-slate-800 bg-slate-950/50">
         <div className="flex items-center">
           <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-300 border border-slate-700">
-            P
+            L
           </div>
           <div className="ml-3">
-            <p className="text-sm font-medium text-white">Prof. Charles</p>
-            <p className="text-xs text-slate-500">Mestre em Biologia</p>
+            <p className="text-sm font-medium text-white">Professor(a)</p>
+            <p className="text-xs text-slate-500">Painel de Controle</p>
           </div>
         </div>
       </div>

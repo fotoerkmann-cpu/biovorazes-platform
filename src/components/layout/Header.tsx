@@ -31,7 +31,7 @@ export function Header() {
               {session?.user?.name || "Carregando..."}
             </p>
             <p className="text-xs text-gray-500">
-              {session?.user?.role === "TEACHER" ? "Professor" : "Aluno"}
+              {(session?.user as any)?.role === "TEACHER" ? "Professor" : "Aluno"}
             </p>
           </div>
           <div className="w-10 h-10 rounded-full bg-green-200 flex items-center justify-center text-green-700 border-2 border-green-500">
